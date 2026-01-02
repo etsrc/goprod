@@ -31,6 +31,17 @@ type Bookmark struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
+func NewBookmark(url, title, description string, tags []string) *Bookmark {
+	return &Bookmark{
+		URL:         url,
+		Title:       title,
+		Description: description,
+		Tags:        tags,
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	}
+}
+
 func (b *Bookmark) Validate() error {
 	if b.Title == "" || len(strings.TrimSpace(b.Title)) < 3 {
 		return ErrTitleTooShort
