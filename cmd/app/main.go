@@ -4,19 +4,18 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/etsrc/goprod/internal/domain"
 	"github.com/etsrc/goprod/internal/infra/persistence"
+	"github.com/etsrc/goprod/internal/infra/transport/openapi"
+	"github.com/etsrc/goprod/internal/infra/transport/openapi/gen"
 	"github.com/etsrc/goprod/internal/service"
 )
 
 func main() {
 	ctx := context.Background()
-
-	// Initialize the in-memory repository
 	bookmarkRepo := persistence.NewInMemoryBookmarkRepository()
-
-	// Initialize the bookmark service with the in-memory repository
 	bookmarkService := service.NewBookmarkService(bookmarkRepo)
 
 	// --- Example Usage ---
@@ -56,26 +55,41 @@ func main() {
 		fmt.Printf("  %d: ID=%s, Title=%s\n", i+1, b.ID, b.Title)
 	}
 
-	// Delete the bookmark
-	fmt.Printf("Deleting bookmark with ID: %s...\n", newBookmark.ID)
-	err = bookmarkService.Delete(ctx, newBookmark.ID)
-	if err != nil {
-		log.Fatalf("Failed to delete bookmark: %v", err)
-	}
-	fmt.Println("Bookmark deleted successfully.")
+	// // Delete the bookmark
+	// fmt.Printf("Deleting bookmark with ID: %s...\n", newBookmark.ID)
+	// err = bookmarkService.Delete(ctx, newBookmark.ID)
+	// if err != nil {
+	// 	log.Fatalf("Failed to delete bookmark: %v", err)
+	// }
+	// fmt.Println("Bookmark deleted successfully.")
 
-	// Verify deletion
-	fmt.Printf("Verifying deletion by fetching bookmark with ID: %s...\n", newBookmark.ID)
-	_, err = bookmarkService.GetByID(ctx, newBookmark.ID)
-	if err != nil {
-		if err == domain.ErrBookmarkNotFound {
-			fmt.Println("Bookmark not found after deletion, as expected.")
-		} else {
-			log.Fatalf("Unexpected error when verifying deletion: %v", err)
-		}
-	} else {
-		log.Fatalf("Bookmark still found after deletion, which is unexpected.")
+	// // Verify deletion
+	// fmt.Printf("Verifying deletion by fetching bookmark with ID: %s...\n", newBookmark.ID)
+	// _, err = bookmarkService.GetByID(ctx, newBookmark.ID)
+	// if err != nil {
+	// 	if err == domain.ErrBookmarkNotFound {
+	// 		fmt.Println("Bookmark not found after deletion, as expected.")
+	// 	} else {
+	// 		log.Fatalf("Unexpected error when verifying deletion: %v", err)
+	// 	}
+	// } else {
+	// 	log.Fatalf("Bookmark still found after deletion, which is unexpected.")
+	// }
+
+	// fmt.Println("In-memory bookmark setup and basic operations successful.")
+
+	// Start Server
+	handler := openapi.NewBookmarkHandler(bookmarkService)
+
+	mux := http.NewServeMux()
+	gen.HandlerFromMux(handler, mux)
+
+	// Just use the mux directly without wrapping it
+	server := &http.Server{
+		Addr:    ":8080",
+		Handler: mux,
 	}
 
-	fmt.Println("In-memory bookmark setup and basic operations successful.")
+	fmt.Println("🚀 Server starting on http://localhost:8080")
+	log.Fatal(server.ListenAndServe())
 }
