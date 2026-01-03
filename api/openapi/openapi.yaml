@@ -1,0 +1,112 @@
+openapi: 3.0.0
+info:
+  title: Bookmark API
+  version: 1.0.0
+  description: API for managing bookmarks based on the in-memory repository logic.
+servers:
+  - url: /v1
+    description: Local development server
+paths:
+  /bookmarks:
+    get:
+      summary: Get all bookmarks
+      operationId: getAllBookmarks
+      responses:
+        '200':
+          description: A list of bookmarks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bookmark'
+        '500':
+          description: Internal server error
+    post:
+      summary: Create a new bookmark
+      operationId: createBookmark
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookmarkInput'
+      responses:
+        '201':
+          description: Bookmark created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bookmark'
+        '400':
+          description: Invalid input.
+        '409':
+          description: Bookmark with the given ID already exists.
+        '500':
+          description: Internal server error
+  /bookmarks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the bookmark.
+        schema:
+          type: string
+    get:
+      summary: Get a bookmark by ID
+      operationId: getBookmarkByID
+      responses:
+        '200':
+          description: The bookmark with the specified ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bookmark'
+        '404':
+          description: Bookmark not found.
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete a bookmark by ID
+      operationId: deleteBookmark
+      responses:
+        '204':
+          description: Bookmark deleted successfully.
+        '404':
+          description: Bookmark not found.
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    Bookmark:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the bookmark.
+          readOnly: true
+        url:
+          type: string
+          format: url
+          description: The URL of the bookmark.
+        title:
+          type: string
+          description: The title of the bookmark.
+      required:
+        - id
+        - url
+        - title
+    BookmarkInput:
+      type: object
+      properties:
+        url:
+          type: string
+          format: url
+          description: The URL of the bookmark.
+        title:
+          type: string
+          description: The title of the bookmark.
+      required:
+        - url
+        - title

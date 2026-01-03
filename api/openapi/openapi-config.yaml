@@ -1,0 +1,5 @@
+package: gen
+generate:
+  - types
+  - std-http
+output: internal/infra/transport/http/gen/bookmark_api.gen.go
