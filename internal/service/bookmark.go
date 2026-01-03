@@ -9,17 +9,24 @@ import (
 	"github.com/google/uuid"
 )
 
-type BookmarkService struct {
+type BookmarkService interface {
+	Create(ctx context.Context, b *domain.Bookmark) error
+	GetByID(ctx context.Context, id string) (*domain.Bookmark, error)
+	List(ctx context.Context) ([]*domain.Bookmark, error)
+	Delete(ctx context.Context, id string) error
+}
+
+type bookmarkService struct {
 	repo domain.BookmarkRepository
 }
 
-func NewBookmarkService(repo domain.BookmarkRepository) *BookmarkService {
-	return &BookmarkService{
+func NewBookmarkService(repo domain.BookmarkRepository) BookmarkService {
+	return &bookmarkService{
 		repo: repo,
 	}
 }
 
-func (s *BookmarkService) Create(ctx context.Context, b *domain.Bookmark) error {
+func (s *bookmarkService) Create(ctx context.Context, b *domain.Bookmark) error {
 	b.ID = uuid.NewString()
 	b.CreatedAt = time.Now()
 	b.UpdatedAt = time.Now()
@@ -35,7 +42,7 @@ func (s *BookmarkService) Create(ctx context.Context, b *domain.Bookmark) error 
 	return nil
 }
 
-func (s *BookmarkService) GetByID(ctx context.Context, id string) (*domain.Bookmark, error) {
+func (s *bookmarkService) GetByID(ctx context.Context, id string) (*domain.Bookmark, error) {
 	if id == "" {
 		return nil, fmt.Errorf("service.GetByID: id is required")
 	}
@@ -48,7 +55,7 @@ func (s *BookmarkService) GetByID(ctx context.Context, id string) (*domain.Bookm
 	return bookmark, nil
 }
 
-func (s *BookmarkService) List(ctx context.Context) ([]*domain.Bookmark, error) {
+func (s *bookmarkService) List(ctx context.Context) ([]*domain.Bookmark, error) {
 	bookmarks, err := s.repo.GetAll(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("service.List: %w", err)
@@ -57,7 +64,7 @@ func (s *BookmarkService) List(ctx context.Context) ([]*domain.Bookmark, error) 
 	return bookmarks, nil
 }
 
-func (s *BookmarkService) Delete(ctx context.Context, id string) error {
+func (s *bookmarkService) Delete(ctx context.Context, id string) error {
 	if id == "" {
 		return fmt.Errorf("service.Delete: id is required")
 	}

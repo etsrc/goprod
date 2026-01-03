@@ -8,8 +8,8 @@ import (
 
 	"github.com/etsrc/goprod/internal/domain"
 	"github.com/etsrc/goprod/internal/infra/persistence"
-	"github.com/etsrc/goprod/internal/infra/transport/openapi"
-	"github.com/etsrc/goprod/internal/infra/transport/openapi/gen"
+	"github.com/etsrc/goprod/internal/infra/transport/rest"
+	"github.com/etsrc/goprod/internal/infra/transport/rest/gen"
 	"github.com/etsrc/goprod/internal/service"
 )
 
@@ -79,7 +79,7 @@ func main() {
 	// fmt.Println("In-memory bookmark setup and basic operations successful.")
 
 	// Start Server
-	handler := openapi.NewBookmarkHandler(bookmarkService)
+	handler := rest.NewBookmarkHandler(bookmarkService)
 
 	mux := http.NewServeMux()
 	gen.HandlerFromMux(handler, mux)

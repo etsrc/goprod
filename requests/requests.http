@@ -1,0 +1,22 @@
+@host = http://localhost:8080
+@contentType = application/json
+
+### Get all bookmarks
+GET {{host}}/bookmarks
+
+### Create a bookmark
+POST {{host}}/bookmarks
+Content-Type: {{contentType}}
+
+{
+    "title": "Google",
+    "url": "https://google.com"
+}
+
+### Get a bookmark by ID
+# @prompt id The bookmark ID
+GET {{host}}/bookmarks/{{id}}
+
+### Delete a bookmark
+# @prompt id The bookmark ID
+DELETE {{host}}/bookmarks/{{id}}

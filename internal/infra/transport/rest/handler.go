@@ -1,20 +1,20 @@
-package openapi
+package rest
 
 import (
 	"encoding/json"
 	"net/http"
 
 	"github.com/etsrc/goprod/internal/domain"
-	"github.com/etsrc/goprod/internal/infra/transport/openapi/gen"
+	"github.com/etsrc/goprod/internal/infra/transport/rest/gen"
 	"github.com/etsrc/goprod/internal/service"
 )
 
 // BookmarkHandler implements gen.ServerInterface
 type BookmarkHandler struct {
-	svc *service.BookmarkService
+	svc service.BookmarkService
 }
 
-func NewBookmarkHandler(svc *service.BookmarkService) *BookmarkHandler {
+func NewBookmarkHandler(svc service.BookmarkService) *BookmarkHandler {
 	return &BookmarkHandler{svc: svc}
 }
 
