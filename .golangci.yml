@@ -3,13 +3,15 @@ run:
 
 linters:
   enable:
-    - errcheck    # Check for unhandled errors
-    - gosimple    # Suggest simpler code
-    - govet       # Standard Go vet tool
-    - staticcheck # Advanced static analysis
-    - unused      # Finds unused constants/variables/functions
-    - revive      # Modern replacement for golint
-    - misspell    # Finds common spelling mistakes
+    - errcheck      # Check for unhandled errors
+    - gosimple      # Suggest simpler code
+    - govet         # Standard Go vet tool
+    - staticcheck   # Advanced static analysis
+    - unused        # Finds unused constants/variables/functions
+    - revive        # Modern replacement for golint
+    - misspell      # Finds common spelling mistakes
+    - paralleltest  # Detects missing usage of t.Parallel() method in your Go test.
+
 
 issues:
   issues.exclude-dirs:
