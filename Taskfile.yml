@@ -12,10 +12,31 @@ tasks:
       - internal/infra/transport/rest/gen/*.go
       - internal/mocks/*.go
 
+  docker:build:
+    desc: Build the production docker image
+    cmds:
+      - podman build -t goprod .
+
+  docker:run:
+    desc: Run the built container
+    cmds:
+      - podman run --rm --name goprod -p 8080:8080 goprod
+
   lint:
-    desc: Run golangci-lint with project config
+    desc: Run linter
+    sources:
+      - "**/*.go"
+      - ".golangci.yml"
+    exclude:
+      - "internal/infra/transport/rest/gen/**/*.go"
+      - "internal/mocks/**/*.go"
     cmds:
       - go tool golangci-lint run ./...
+
+  lint:fix:
+    desc: Automatically fix linter issues where possible
+    cmds:
+      - go tool golangci-lint run --fix
 
   test:
     desc: Run all tests with race detection and cache cleared
