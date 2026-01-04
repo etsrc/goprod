@@ -1,0 +1,11 @@
+# Full path for podman
+FROM docker.io/library/golang:1.25-alpine
+RUN go install github.com/air-verse/air@latest
+
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+
+EXPOSE 8080
+CMD ["air"]
