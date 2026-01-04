@@ -1,0 +1,38 @@
+version: '3'
+
+tasks:
+  generate:
+    desc: Run all code generation (OpenAPI and Mocks)
+    cmds:
+      - go generate ./...
+    sources:
+      - api/openapi.yaml
+      - internal/domain/**/*.go
+    generates:
+      - internal/infra/transport/rest/gen/*.go
+      - internal/mocks/*.go
+
+  lint:
+    desc: Run golangci-lint with project config
+    cmds:
+      - go tool golangci-lint run ./...
+
+  test:
+    desc: Run all tests with race detection and cache cleared
+    cmds:
+      - go test -v -race -count=1 ./...
+
+  check:
+    desc: Run lint and tests together
+    deps: [lint, test]
+
+  build:
+    desc: Build the application binary
+    cmds:
+      - go build -o bin/app cmd/main.go
+
+  all:
+    desc: Regenerate everything and run all checks
+    cmds:
+      - task: generate
+      - task: check
