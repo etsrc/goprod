@@ -2,6 +2,7 @@ package rest
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/etsrc/goprod/internal/domain"
@@ -28,7 +29,11 @@ func (h *BookmarkHandler) GetAllBookmarks(w http.ResponseWriter, r *http.Request
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(bookmarks)
+	if err := json.NewEncoder(w).Encode(bookmarks); err != nil {
+		log.Printf("Error encoding bookmarks: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
 }
 
 // CreateBookmark handles POST /bookmarks
@@ -53,7 +58,12 @@ func (h *BookmarkHandler) CreateBookmark(w http.ResponseWriter, r *http.Request)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(bm)
+	if err := json.NewEncoder(w).Encode(bm); err != nil {
+		log.Printf("Error encoding new bookmark: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
 }
 
 // GetBookmarkByID handles GET /bookmarks/{id}
@@ -65,7 +75,11 @@ func (h *BookmarkHandler) GetBookmarkByID(w http.ResponseWriter, r *http.Request
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(bm)
+	if err := json.NewEncoder(w).Encode(bm); err != nil {
+		log.Printf("Error encoding new bookmark: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
 }
 
 // DeleteBookmark handles DELETE /bookmarks/{id}

@@ -19,7 +19,7 @@ func NewInMemoryBookmarkRepository() *InMemoryBookmarkRepository {
 	}
 }
 
-func (r *InMemoryBookmarkRepository) Create(ctx context.Context, b *domain.Bookmark) error {
+func (r *InMemoryBookmarkRepository) Create(_ context.Context, b *domain.Bookmark) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -31,7 +31,7 @@ func (r *InMemoryBookmarkRepository) Create(ctx context.Context, b *domain.Bookm
 	return nil
 }
 
-func (r *InMemoryBookmarkRepository) GetByID(ctx context.Context, id string) (*domain.Bookmark, error) {
+func (r *InMemoryBookmarkRepository) GetByID(_ context.Context, id string) (*domain.Bookmark, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -42,7 +42,7 @@ func (r *InMemoryBookmarkRepository) GetByID(ctx context.Context, id string) (*d
 	return bookmark, nil
 }
 
-func (r *InMemoryBookmarkRepository) GetAll(ctx context.Context) ([]*domain.Bookmark, error) {
+func (r *InMemoryBookmarkRepository) GetAll(_ context.Context) ([]*domain.Bookmark, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -53,7 +53,7 @@ func (r *InMemoryBookmarkRepository) GetAll(ctx context.Context) ([]*domain.Book
 	return allBookmarks, nil
 }
 
-func (r *InMemoryBookmarkRepository) Delete(ctx context.Context, id string) error {
+func (r *InMemoryBookmarkRepository) Delete(_ context.Context, id string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

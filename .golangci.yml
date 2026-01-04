@@ -1,0 +1,22 @@
+run:
+  timeout: 5m
+
+linters:
+  enable:
+    - errcheck    # Check for unhandled errors
+    - gosimple    # Suggest simpler code
+    - govet       # Standard Go vet tool
+    - staticcheck # Advanced static analysis
+    - unused      # Finds unused constants/variables/functions
+    - revive      # Modern replacement for golint
+    - misspell    # Finds common spelling mistakes
+
+issues:
+  issues.exclude-dirs:
+    - internal/infra/transport/rest/gen
+    - internal/mocks  
+  exclude-rules:
+    # Relax rules for test files
+    - path: _test\.go
+      linters:
+        - errcheck

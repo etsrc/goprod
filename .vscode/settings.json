@@ -1,0 +1,10 @@
+{
+    "go.lintTool": "golangci-lint",
+    "go.lintFlags": [
+        "--fast"
+    ],
+    "go.alternateTools": {
+        "golangci-lint": "go tool golangci-lint"
+    },
+    "go.lintOnSave": "package"
+}
