@@ -10,7 +10,9 @@ linters:
     - unused        # Finds unused constants/variables/functions
     - revive        # Modern replacement for golint
     - misspell      # Finds common spelling mistakes
-    - paralleltest  # Detects missing usage of t.Parallel() method in your Go test.
+    - paralleltest  # Detects missing usage of t.Parallel() method in your Go test
+    - cyclop        # Checks function and package cyclomatic complexity
+    - gosec         # Inspects source code for security problems
 
 
 issues:

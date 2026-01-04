@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/etsrc/goprod/internal/domain"
 	"github.com/etsrc/goprod/internal/infra/persistence"
@@ -86,8 +87,9 @@ func main() {
 
 	// Just use the mux directly without wrapping it
 	server := &http.Server{
-		Addr:    ":8080",
-		Handler: mux,
+		Addr:              ":8080",
+		Handler:           mux,
+		ReadHeaderTimeout: 10 * time.Second,
 	}
 
 	fmt.Println("🚀 Server starting on http://localhost:8080")

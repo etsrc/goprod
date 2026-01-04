@@ -3,7 +3,6 @@ Production-Ready Go: Tools, Patterns and Techniques
 
 ## TODO
 - Add table driven tests
-- Add gosec static analysis
 - Add goimports
 - Add postgres database and migrations
 - Add docker-compose
