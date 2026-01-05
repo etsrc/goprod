@@ -96,7 +96,7 @@ func TestBookmarkHandler_CreateBookmark(t *testing.T) {
 		{
 			name:        "Invalid Request Body",
 			requestBody: `{"title": "New Site",`,
-			mockBehavior: func(m *mocks.BookmarkService) {
+			mockBehavior: func(_ *mocks.BookmarkService) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedBody: "Invalid request body\n",
