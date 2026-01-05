@@ -12,12 +12,14 @@ import (
 )
 
 func TestBookmarkIntegration(t *testing.T) {
-	// Setup
+	t.Parallel()
+
 	ctx := context.Background()
 	repo := persistence.NewInMemoryBookmarkRepository()
 	svc := service.NewBookmarkService(repo)
 
 	t.Run("Full Lifecycle", func(t *testing.T) {
+		t.Parallel()
 		// 1. Create
 		newBookmark := domain.NewBookmark(
 			"https://example.com",
