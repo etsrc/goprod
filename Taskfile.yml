@@ -45,6 +45,8 @@ tasks:
           -e POSTGRES_DB=goprod \
           -p 5432:5432 \
           -d docker.io/library/postgres:16-alpine
+      - echo "Waiting for database to start..."
+      - sleep 5
 
   db:stop:
     desc: Stop and remove the Postgres container
@@ -56,6 +58,43 @@ tasks:
     desc: Tail database logs
     cmds:
       - podman logs -f goprod-db
+
+  db:cli:
+    desc: Open interactive Postgres CLI
+    cmds:
+      - podman exec -it goprod-db psql -U postgres -d goprod
+
+  migrate:up:
+    desc: Start DB and apply all Postgres migrations
+    deps: [db:start]
+    cmds:
+      # Use 'go run' with the -tags flag to include the postgres driver
+      - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate -path internal/infra/persistence/postgres/migrations -database "postgres://postgres:postgres@localhost:5432/goprod?sslmode=disable" up
+
+  migrate:drop:
+    desc: Drop all tables and migrations (Clean Slate)
+    cmds:
+      # The 'drop' command removes everything including the schema_migrations table
+      - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate -path internal/infra/persistence/postgres/migrations -database "postgres://postgres:postgres@localhost:5432/goprod?sslmode=disable" drop -f
+
+  migrate:reset:
+    desc: Drop everything and re-apply all migrations
+    cmds:
+      - task: migrate:drop
+      - task: migrate:up
+
+  migrate:new:
+    desc: Create a new migration file (usage task migrate:new NAME=add_fields)
+    cmds:
+      - mkdir -p internal/infra/persistence/postgres/migrations
+      - go tool migrate create -ext sql -dir internal/infra/persistence/postgres/migrations -seq {{.NAME}}
+
+  db:seed:
+    desc: Insert example bookmarks into the database
+    cmds:
+      - |
+        podman exec -i goprod-db psql -U postgres -d goprod < internal/infra/persistence/postgres/scripts/seed.sql
+      - echo "Database seeded successfully!"
 
   lint:
     desc: Run linter
