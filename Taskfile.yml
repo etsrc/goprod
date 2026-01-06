@@ -1,6 +1,12 @@
 version: '3'
 
 tasks:
+  init:
+    desc: Set up local development environment (including hooks)
+    cmds:
+      - cp scripts/pre-commit .git/hooks/pre-commit
+      - chmod +x .git/hooks/pre-commit
+
   generate:
     desc: Run all code generation (OpenAPI and Mocks)
     cmds:
@@ -52,8 +58,14 @@ tasks:
     cmds:
       - go build -o bin/app cmd/main.go
 
+  tidy:
+    desc: Clean up and sync Go dependencies
+    cmds:
+      - go mod tidy
+
   all:
     desc: Regenerate everything and run all checks
     cmds:
+      - task: tidy
       - task: generate
       - task: check

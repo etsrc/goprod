@@ -1,0 +1,30 @@
+#!/bin/bash
+# .git/hooks/pre-commit
+
+echo "🚀 Running pre-commit validation..."
+
+# 1. Run the 'all' task
+go tool task all
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+    echo "❌ Pre-commit checks failed."
+    exit 1
+fi
+
+# 2. Strict Check: If anything is modified, block the commit.
+# We use --exit-code to detect if the working tree differs from the index.
+git diff --exit-code
+DIFF_RESULT=$?
+
+if [ $DIFF_RESULT -ne 0 ]; then
+    echo "--------------------------------------------------------"
+    echo "❌ ERROR: The build process modified files."
+    echo "This usually means 'go mod tidy' or 'go generate' updated something."
+    echo "Please review the changes above, 'git add' them if they are correct, and commit again."
+    echo "--------------------------------------------------------"
+    exit 1
+fi
+
+echo "✅ All checks passed!"
+exit 0
