@@ -10,7 +10,7 @@ import (
 	"syscall"
 
 	"github.com/etsrc/goprod/internal/infra/config"
-	"github.com/etsrc/goprod/internal/infra/persistence"
+	persistence "github.com/etsrc/goprod/internal/infra/persistence/inmem"
 	"github.com/etsrc/goprod/internal/infra/transport/rest"
 	"github.com/etsrc/goprod/internal/infra/transport/rest/gen"
 	"github.com/etsrc/goprod/internal/service"

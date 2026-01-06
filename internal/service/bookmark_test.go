@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/etsrc/goprod/internal/domain"
-	"github.com/etsrc/goprod/internal/infra/persistence"
+	persistence "github.com/etsrc/goprod/internal/infra/persistence/inmem"
 	"github.com/etsrc/goprod/internal/service"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

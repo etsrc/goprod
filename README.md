@@ -6,3 +6,4 @@ Production-Ready Go: Tools, Patterns and Techniques
 - Add docker-compose
 - enums
 - github actions
+- secrets management

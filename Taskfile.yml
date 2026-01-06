@@ -34,6 +34,29 @@ tasks:
     cmds:
       - podman run --rm --name goprod -p 8080:8080 goprod
 
+  db:start:
+    desc: Start a Postgres container
+    status:
+      - podman ps | grep goprod-db
+    cmds:
+      - |
+        podman run --name goprod-db \
+          -e POSTGRES_PASSWORD=postgres \
+          -e POSTGRES_DB=goprod \
+          -p 5432:5432 \
+          -d docker.io/library/postgres:16-alpine
+
+  db:stop:
+    desc: Stop and remove the Postgres container
+    cmds:
+      - podman stop goprod-db
+      - podman rm goprod-db
+
+  db:logs:
+    desc: Tail database logs
+    cmds:
+      - podman logs -f goprod-db
+
   lint:
     desc: Run linter
     sources:
