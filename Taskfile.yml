@@ -2,10 +2,16 @@ version: '3'
 
 tasks:
   init:
-    desc: Set up local development environment (including hooks)
+    desc: Set up local development environment
     cmds:
+      # 1. Setup Git Hooks
+      - mkdir -p .git/hooks
       - cp scripts/pre-commit .git/hooks/pre-commit
       - chmod +x .git/hooks/pre-commit
+      # 2. Pre-download dependencies and tools
+      - go mod download
+      - task: tidy
+      - echo "✅ Environment ready! Git hooks installed and dependencies cached."
 
   generate:
     desc: Run all code generation (OpenAPI and Mocks)
